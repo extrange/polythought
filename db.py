@@ -3,6 +3,7 @@ import time
 import uuid
 from dataclasses import dataclass
 from typing import Optional
+from pathlib import Path
 
 
 @dataclass
@@ -14,7 +15,7 @@ class Link:
     sent: Optional[int]
 
 
-con = sqlite3.connect("links.db")
+con = sqlite3.connect(Path(__file__).parent / "links.db")
 cur = con.cursor()
 cur.execute(
     """--sql
