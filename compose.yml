@@ -1,0 +1,16 @@
+services:
+  polythought:
+    build: .
+    restart: always
+    container_name: polythought
+    command: [ "python", "-u", "/src/main.py" ]
+    volumes:
+      - ./:/src
+    networks:
+      - server-core_browserless
+    environment:
+      TZ: Asia/Singapore
+
+networks:
+  server-core_browserless:
+    external: true

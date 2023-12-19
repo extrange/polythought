@@ -1,0 +1,11 @@
+bs4
+black
+pyrogram
+playwright
+playwright-stealth
+python-dotenv
+requests
+shortuuid
+tgcrypto
+uvloop
+urltitle
