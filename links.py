@@ -48,7 +48,7 @@ async def fetch_page_title(url: str):
             )
 
             logger.info(f"Navigating to '{url_with_prefix}'...")
-            
+
             await page.goto(url_with_prefix, timeout=5000)
             title = await page.title()
             if not title:
@@ -127,8 +127,12 @@ async def send_links(app: Client):
         # Mark as sent
         mark_as_sent(link)
 
+    if not unsent_links:
+        logger.info("No links from @PolythoughtBot")
+
     # If there were no links today, skip sending
     if not links:
+        logger.info("No links from @PolythoughtBot/Wallabag to be sent, skipping")
         return
 
     # Craft message
@@ -137,6 +141,8 @@ async def send_links(app: Client):
         message += f"\n<b>{html.escape(user_name)}</b>:\n"
         for count, user_link in enumerate(links[user_name], 1):
             message += f'[{count}]: <a href="{html.escape(user_link["url"])}">{html.escape(user_link["title"])}</a>\n'
+
+    message += "\n<i>Forward your links to @PolythoughtBot</i>"
 
     await app.send_message(
         int(os.environ["CHANNEL_ID"]),

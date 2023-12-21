@@ -2,8 +2,11 @@ import sqlite3
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Optional
 from pathlib import Path
+from typing import Optional
+from log import logger
+
+from main import DEBUG
 
 
 @dataclass
@@ -15,7 +18,9 @@ class Link:
     sent: Optional[int]
 
 
-con = sqlite3.connect(Path(__file__).parent / "links.db")
+db_path = f"file:{Path(__file__).parent / 'links.db'}{'?mode=ro' if DEBUG else ''}"
+logger.info(f"Connecting to db {db_path}")
+con = sqlite3.connect(db_path, uri=True)
 cur = con.cursor()
 cur.execute(
     """--sql
@@ -40,12 +45,24 @@ def add_link(user: str, url: str, title: str) -> Link:
     return Link(id=user_uuid, user=user, url=url, title=title, sent=None)
 
 
+def delete_unsent_links(user: str):
+    if DEBUG:
+        return 0
+    res = cur.execute(
+        "DELETE FROM links WHERE user=:user AND sent IS NULL", {"user": user}
+    )
+    con.commit()
+    return res.rowcount
+
+
 def get_links(user: str) -> list[Link]:
     res = cur.execute("SELECT * FROM links WHERE user=:user", {"user": user})
     return [Link(*r) for r in res.fetchall()]
 
 
 def mark_as_sent(link: Link):
+    if DEBUG:
+        return
     cur.execute(
         "UPDATE links SET sent=:sent WHERE id=:id", {"id": link.id, "sent": time.time()}
     )
