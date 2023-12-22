@@ -1,14 +1,17 @@
 import os
+from typing import AsyncGenerator, cast
 
 from pyrogram import filters
 from pyrogram.client import Client
 from pyrogram.enums import MessageEntityType, ParseMode
-from pyrogram.types import BotCommand, Message
+from pyrogram.types import BotCommand, ChatMember, Message
 
+from cache import cache
 from db import Link, add_link, delete_unsent_links, get_unsent_links
 from links import fetch_page_title
 
 MY_CHAT_ID = os.environ["MY_CHAT_ID"]
+
 HELP_STR = """Forward me links that you'd like to share with your friends! Links will be posted daily on @Polythought at 7am."""
 
 from log import logger
@@ -16,6 +19,25 @@ from log import logger
 
 def format_unsent_links(links: list[Link]):
     return f"""**Links to be shared:**\n\n{'\n\n'.join([f"{n+1}. [{l.title}]({l.url})" for n,l in enumerate(links)])}"""
+
+
+async def is_user_in_channel(app: Client, user: str):
+    # Check cache first
+    key = "users"
+    if not key in cache:
+        chat_members = app.get_chat_members(int(os.environ["CHANNEL_ID"]))
+        if chat_members is None:
+            raise RuntimeError("Failed to fetch channel users!")
+        cache.set(
+            key=key,
+            value=[
+                str(member.user.id)
+                async for member in cast(AsyncGenerator[ChatMember, None], chat_members)
+            ],
+            expire=60,  # 1 min
+        )
+    users = cast(list[str], cache[key])
+    return user in users
 
 
 async def register_handlers(app: Client):
@@ -54,7 +76,18 @@ async def register_handlers(app: Client):
     @app.on_message(filters.text)
     async def handle_text(client, message: Message):
         """Extract urls from messages, get titles, and save to DB."""
+        logger.info(
+            f"Received message from {message.from_user.first_name}: {message.text}"
+        )
         try:
+            if not await is_user_in_channel(app, str(message.from_user.id)):
+                logger.info(
+                    f"User {message.from_user.first_name} is not in channel, refusing"
+                )
+                return await message.reply(
+                    "Join the @Polythought channel to forward me links! (if you just joined, this may take up to a minute to be updated)"
+                )
+
             if not message.entities:
                 return await message.reply(HELP_STR)
 
@@ -90,6 +123,7 @@ async def register_handlers(app: Client):
 
             # Reply user with currently unsent links
             unsent_links = get_unsent_links(user_id)
+            logger.info(f"Discovered links: {unsent_links}")
 
             await reply.edit(
                 format_unsent_links(unsent_links), disable_web_page_preview=True
