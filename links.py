@@ -49,7 +49,7 @@ async def fetch_page_title(url: str):
 
             logger.info(f"Navigating to '{url_with_prefix}'...")
 
-            await page.goto(url_with_prefix, timeout=5000)
+            await page.goto(url_with_prefix, timeout=10_000)
             title = await page.title()
             if not title:
                 raise ValueError("Blank title")
