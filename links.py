@@ -18,7 +18,7 @@ from db import get_unsent_links, mark_as_sent
 
 FEED_URLS = {
     "Chanel": os.environ["CHANEL_FEED_URL"],
-    "Nicholas": os.environ["NICHOLAS_FEED_URL"],
+    # "Nicholas": os.environ["NICHOLAS_FEED_URL"],
 }
 
 # Necessary for xml element search
