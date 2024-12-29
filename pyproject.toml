@@ -1,0 +1,40 @@
+[project]
+name = "polythought"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bs4>=0.0.2",
+    "diskcache>=5.6.3",
+    "playwright>=1.49.1",
+    "playwright-stealth>=1.0.6",
+    "pydantic>=2.10.4",
+    "pydantic-settings>=2.7.0",
+    "telethon>=1.38.1",
+    "uvloop>=0.21.0",
+    "requests>=2.32.3",
+    "setuptools>=75.6.0",
+]
+
+[tool.uv]
+package = true
+
+[tool.pyright]
+# pre-commit: make pyright use the venv
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/latest/explanation/goodpractices.html#which-import-mode
+addopts = ["--import-mode=importlib"]
+
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "pyright>=1.1.391",
+    "pytest>=8.3.4",
+    "pytest-env>=1.1.5",
+    "ruff>=0.8.4",
+]

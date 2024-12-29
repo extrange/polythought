@@ -3,11 +3,15 @@ services:
     build: .
     restart: always
     container_name: polythought
-    command: [ "python", "-u", "/src/main.py" ]
     volumes:
-      - ./:/src
+      - ./db:/app/db
+      - ./credentials:/app/credentials
+      - ./.cache:/app/.cache
     networks:
       - server-core_browserless
+    env_file:
+      - path: env/prod.env
+        required: true
     environment:
       TZ: Asia/Singapore
 

@@ -2,8 +2,10 @@ import os
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
+_HOUR_TO_SEND = 7
 
-def get_seconds_to_7am(next_day=False):
+
+def get_seconds_to_7am(*, next_day: bool = False) -> int:
     """
     Return the number of seconds until 7am today, or if already past, tomorrow.
 
@@ -14,9 +16,8 @@ def get_seconds_to_7am(next_day=False):
     datetime_7am_today = datetime(
         year=now.year, month=now.month, day=now.day, hour=7, tzinfo=tz
     )
-    if now.hour < 7 and not next_day:
+    if now.hour < _HOUR_TO_SEND and not next_day:
         # Time now is before 7am, so schedule for today
         return (datetime_7am_today - now).seconds
-    else:
-        # It's already past 7am
-        return (datetime_7am_today + timedelta(days=1) - now).seconds
+    # It's already past 7am
+    return (datetime_7am_today + timedelta(days=1) - now).seconds
