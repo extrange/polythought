@@ -10,6 +10,7 @@ from telethon import TelegramClient
 from telethon.tl.types import User
 
 from polythought.db import get_unsent_links, mark_as_sent
+from polythought.settings import Settings
 
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +29,9 @@ async def fetch_page_title(url: str) -> str:
     async with async_playwright() as p:
         try:
             _logger.info("Connecting to browser...")
-            browser = await p.chromium.connect_over_cdp("ws://browserless:3000")
+            browser = await p.chromium.connect_over_cdp(
+                f"ws://browserless:3000?token={Settings.BROWSERLESS_TOKEN.get_secret_value()}"
+            )
             page = await browser.new_page()
             await stealth_async(page)
 

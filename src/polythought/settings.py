@@ -14,6 +14,7 @@ class _Settings(BaseSettings):
     BOT_TOKEN: SecretStr
     CHANNEL_ID: int
     MY_CHAT_ID: int
+    BROWSERLESS_TOKEN: SecretStr
 
 
 Settings = _Settings.model_validate({})
