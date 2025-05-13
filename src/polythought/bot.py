@@ -38,7 +38,7 @@ async def is_user_in_channel(app: TelegramClient, user_id: str) -> bool:
             expire=60,  # 1 min
         )
         _logger.debug("user_id %s: updated cache")
-    users = cast(list[int], cache[key])
+    users = cast("list[int]", cache[key])
     return user_id in users
 
 
@@ -102,7 +102,7 @@ async def handle_text(message: Message) -> None:
         message.sender.first_name if message.sender else "Unknown sender",
         message.text,
     )
-    app = cast(TelegramClient, message.client)
+    app = cast("TelegramClient", message.client)
     try:
         if not await is_user_in_channel(app, str(message.sender_id)):
             _logger.info(
@@ -135,7 +135,7 @@ async def handle_text(message: Message) -> None:
         user_id = str(message.sender_id)
 
         reply = cast(
-            Message,
+            "Message",
             await message.reply("Processing links...", link_preview=False),
         )
 
