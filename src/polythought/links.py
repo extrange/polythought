@@ -74,11 +74,11 @@ async def send_links(app: TelegramClient) -> None:
         mark_as_sent(link)
 
     if not unsent_links:
-        _logger.info("No unsent links from @PolythoughtBot")
+        _logger.debug("No unsent links from @PolythoughtBot")
 
     # If there were no links today, skip sending
     if not links:
-        _logger.info("No links from @PolythoughtBot to be sent, skipping send job")
+        _logger.debug("No links from @PolythoughtBot to be sent, skipping send job")
         return
 
     # Craft message

@@ -21,13 +21,13 @@ async def schedule(app: TelegramClient) -> None:
     else:
         # Initial run
         seconds_to_wait = get_seconds_to_7am()
-        _logger.info("Waiting for %ss...", seconds_to_wait)
+        _logger.debug("Waiting for %ss...", seconds_to_wait)
         await asyncio.sleep(seconds_to_wait)
         await send_links(app)
 
         while True:
             seconds_to_wait = get_seconds_to_7am(next_day=True)
-            _logger.info("Waiting for %ss...", seconds_to_wait)
+            _logger.debug("Waiting for %ss...", seconds_to_wait)
             await asyncio.sleep(seconds_to_wait)
             try:
                 await send_links(app)
