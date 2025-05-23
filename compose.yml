@@ -8,7 +8,7 @@ services:
       - ./credentials:/app/credentials
       - ./.cache:/app/.cache
     networks:
-      - server-core_browserless
+      - polythought
     env_file:
       - path: env/prod.env
         required: true
@@ -16,5 +16,4 @@ services:
       TZ: Asia/Singapore
 
 networks:
-  server-core_browserless:
-    external: true
+  polythought:
