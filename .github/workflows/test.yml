@@ -26,7 +26,7 @@ jobs:
 
       # Options: https://github.com/docker/build-push-action
       - name: Build the `deployment` target stage of the image
-        uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355 # v6
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
         with:
             push: false
             target: deployment
