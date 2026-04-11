@@ -13,7 +13,7 @@ jobs:
             fetch-depth: 0
 
       - name: Secret Scanning
-        uses: trufflesecurity/trufflehog@bff3d2670b362bbb4a0bcdeffea146cbc2ad3abd # main
+        uses: trufflesecurity/trufflehog@580628bb9d5455140899afe2cb981ff5640bf399 # main
         with:
             extra_args: --only-verified
 
@@ -26,7 +26,7 @@ jobs:
 
       # Options: https://github.com/docker/build-push-action
       - name: Build the `deployment` target stage of the image
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7
         with:
             push: false
             target: deployment
