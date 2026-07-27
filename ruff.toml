@@ -10,6 +10,7 @@ select = [
 
 ignore = [
     "TRY003",
+    "CPY001", # Copyright notice at top of file
     "BLE001", # Bare exception
     "D100",   # undocumented-public-module
     "D101",   # undocumented-public-class
