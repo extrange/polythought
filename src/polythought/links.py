@@ -5,7 +5,7 @@ from collections import defaultdict
 from typing import TypedDict
 
 from playwright.async_api import async_playwright
-from playwright_stealth import stealth_async
+from playwright_stealth import Stealth
 from telethon import TelegramClient
 from telethon.tl.types import User
 
@@ -13,6 +13,7 @@ from polythought.db import get_unsent_links, mark_as_sent
 from polythought.settings import Settings
 
 _logger = logging.getLogger(__name__)
+_stealth = Stealth()
 
 
 class SentLink(TypedDict):
@@ -33,7 +34,7 @@ async def fetch_page_title(url: str) -> str:
                 f"ws://browserless:3000?token={Settings.BROWSERLESS_TOKEN.get_secret_value()}"
             )
             page = await browser.new_page()
-            await stealth_async(page)
+            await _stealth.apply_stealth_async(page)
 
             # Attempt http by default
             url_with_prefix = (
