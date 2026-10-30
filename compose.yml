@@ -6,7 +6,6 @@ services:
     volumes:
       - ./db:/app/db
       - ./credentials:/app/credentials
-      - ./.cache:/app/.cache
     networks:
       - polythought
     env_file:

@@ -8,7 +8,6 @@ class _Settings(BaseSettings):
     DEBUG: bool = False
     SESSION_FILE: Path
     DB_PATH: Path
-    DISK_CACHE_DIR: Path
     API_ID: int
     API_HASH: SecretStr
     BOT_TOKEN: SecretStr

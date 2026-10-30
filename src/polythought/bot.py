@@ -7,7 +7,7 @@ from telethon.tl.custom.message import Message
 from telethon.tl.types import MessageEntityTextUrl, MessageEntityUrl
 from telethon.types import BotCommand, BotCommandScopeDefault
 
-from polythought.cache import cache
+from polythought.cache import TTLCache
 from polythought.db import Link, add_link, delete_unsent_links, get_unsent_links
 from polythought.links import fetch_page_title
 from polythought.settings import Settings
@@ -22,23 +22,24 @@ def format_unsent_links(links: list[Link]) -> str:
     return f"""**Links to be shared:**\n\n{'\n\n'.join([f"{idx+1}. [{link.title}]({link.url})" for idx,link in enumerate(links)])}"""
 
 
+# Seconds; keeps channel member lookups clear of Telegram's rate limits.
+_USERS_TTL = 60.0
+
+_users: TTLCache[str, list[str]] = TTLCache(ttl=_USERS_TTL)
+
+
 async def is_user_in_channel(app: TelegramClient, user_id: str) -> bool:
     """Check if a user is in our channel."""
-    # Check cache first
-    key = "users"
-    if key not in cache:
-        _logger.debug("user_id %s not in cache, fetching", user_id)
+    users = _users.get("channel_members")
+    if users is None:
+        _logger.debug("channel members not cached, fetching")
         chat_users = await app.get_participants(Settings.CHANNEL_ID)
         if chat_users is None:
             msg = f"{user_id=} Failed to fetch channel users!"
             raise RuntimeError(msg)
-        cache.set(
-            key=key,
-            value=[str(user.id) for user in chat_users],
-            expire=60,  # 1 min
-        )
-        _logger.debug("user_id %s: updated cache")
-    users = cast("list[int]", cache[key])
+        users = [str(user.id) for user in chat_users]
+        _users.set("channel_members", users)
+        _logger.debug("cached %s channel members", len(users))
     return user_id in users
 
 
