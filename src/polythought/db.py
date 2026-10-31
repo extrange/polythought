@@ -15,7 +15,7 @@ class Link:
     user: str
     url: str
     title: str
-    sent: int | None
+    sent: float | None
 
 
 db_path = f"file:{Settings.DB_PATH}"
@@ -57,7 +57,10 @@ def delete_unsent_links(user: str) -> int:
 
 def get_links(user: str) -> list[Link]:
     """Return all links from a user, regardless of sent status."""
-    res = cur.execute("SELECT * FROM links WHERE user=:user", {"user": user})
+    res = cur.execute(
+        "SELECT id, user, url, title, sent FROM links WHERE user=:user",
+        {"user": user},
+    )
     return [Link(*r) for r in res.fetchall()]
 
 
@@ -73,9 +76,12 @@ def get_unsent_links(user_id: str | None = None) -> list[Link]:
     """Get unsent links from a user, or if not provided, all."""
     if user_id:
         res = cur.execute(
-            "SELECT * FROM links WHERE user=:user AND sent IS NULL", {"user": user_id}
+            "SELECT id, user, url, title, sent FROM links WHERE user=:user AND sent IS NULL",
+            {"user": user_id},
         )
     else:
-        res = cur.execute("SELECT * FROM links WHERE sent is NULL")
+        res = cur.execute(
+            "SELECT id, user, url, title, sent FROM links WHERE sent IS NULL",
+        )
 
     return [Link(*r) for r in res.fetchall()]

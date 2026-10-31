@@ -1,0 +1,23 @@
+# Keep the build context small and avoid shipping local secrets/state.
+.git
+.github
+.venv
+.cache
+**/.cache
+.ruff_cache
+**/.ruff_cache
+.pytest_cache
+**/.pytest_cache
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+db
+credentials
+env
+tests
+compose*.yml
+renovate.json
+.pre-commit-config.yaml
+.devenv
+.direnv
+devenv.*

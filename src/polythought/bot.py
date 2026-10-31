@@ -19,7 +19,10 @@ _logger = logging.getLogger(__name__)
 
 def format_unsent_links(links: list[Link]) -> str:
     """Format links for sharing."""
-    return f"""**Links to be shared:**\n\n{'\n\n'.join([f"{idx+1}. [{link.title}]({link.url})" for idx,link in enumerate(links)])}"""
+    body = "\n\n".join(
+        f"{idx}. [{link.title}]({link.url})" for idx, link in enumerate(links, 1)
+    )
+    return f"**Links to be shared:**\n\n{body}"
 
 
 # Seconds; keeps channel member lookups clear of Telegram's rate limits.
@@ -98,17 +101,18 @@ async def handle_text(message: Message) -> None:
         _logger.warning("Received empty message from %s", message.sender_id)
         return None
 
+    sender_name = message.sender.first_name if message.sender else "Unknown sender"
     _logger.info(
         "Received message from %s: %s",
-        message.sender.first_name if message.sender else "Unknown sender",
+        sender_name,
         message.text,
     )
     app = cast("TelegramClient", message.client)
     try:
         if not await is_user_in_channel(app, str(message.sender_id)):
             _logger.info(
-                "User %s} is not in channel, refusing",
-                message.sender.first_name if message.sender else "Unknown sender",
+                "User %s is not in channel, refusing",
+                sender_name,
             )
             return await message.reply(
                 "Join the @Polythought channel to forward me links! (if you just joined, this may take up to a minute to be updated)"
@@ -166,6 +170,6 @@ async def handle_text(message: Message) -> None:
         )
         await app.send_message(
             Settings.MY_CHAT_ID,
-            f"Encountered error for {message.sender.first_name if message.sender else "Unknown sender"}: {msg})",
+            f"Encountered error for {sender_name}: {msg})",
             parse_mode="html",
         )

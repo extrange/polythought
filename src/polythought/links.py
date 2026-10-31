@@ -1,6 +1,5 @@
 import html
 import logging
-import os
 from collections import defaultdict
 from typing import TypedDict
 
@@ -31,7 +30,7 @@ async def fetch_page_title(url: str) -> str:
         try:
             _logger.info("Connecting to browser...")
             browser = await p.chromium.connect_over_cdp(
-                f"ws://browserless:3000?token={Settings.BROWSERLESS_TOKEN.get_secret_value()}"
+                f"{Settings.BROWSERLESS_URL}?token={Settings.BROWSERLESS_TOKEN.get_secret_value()}"
             )
             page = await browser.new_page()
             await _stealth.apply_stealth_async(page)
@@ -95,7 +94,7 @@ async def send_links(app: TelegramClient) -> None:
     message += "\n<i>Forward your links to @PolythoughtBot</i>"
 
     await app.send_message(
-        int(os.environ["CHANNEL_ID"]),
+        Settings.CHANNEL_ID,
         message,
         parse_mode="html",
         link_preview=False,

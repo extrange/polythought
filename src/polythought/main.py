@@ -19,8 +19,8 @@ async def _main() -> None:
     await register_handlers(app)
 
     async with asyncio.TaskGroup() as tg:
-        _run_app = tg.create_task(app.run_until_disconnected())  # pyright: ignore[reportArgumentType]
-        _run_schedule = tg.create_task(schedule(app))
+        tg.create_task(app.run_until_disconnected())  # pyright: ignore[reportArgumentType]
+        tg.create_task(schedule(app))
 
 
 if __name__ == "__main__":

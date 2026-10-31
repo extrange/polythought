@@ -1,8 +1,11 @@
+name: polythought
+
 services:
   polythought:
-    build: .
+    image: ghcr.io/extrange/polythought:latest
     restart: always
     container_name: polythought
+    init: true
     volumes:
       - ./db:/app/db
       - ./credentials:/app/credentials

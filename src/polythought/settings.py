@@ -14,6 +14,8 @@ class _Settings(BaseSettings):
     CHANNEL_ID: int
     MY_CHAT_ID: int
     BROWSERLESS_TOKEN: SecretStr
+    BROWSERLESS_URL: str = "ws://browserless:3000"
+    TZ: str = "Asia/Singapore"
 
 
 Settings = _Settings.model_validate({})
