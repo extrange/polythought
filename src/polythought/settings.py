@@ -1,19 +1,28 @@
+"""Runtime settings, read from environment variables."""
+
 from pathlib import Path
 
 from pydantic import SecretStr
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class _Settings(BaseSettings):
-    DEBUG: bool = False
-    SESSION_FILE: Path
-    DB_PATH: Path
-    API_ID: int
+    """All runtime configuration, supplied as environment variables."""
+
+    model_config = SettingsConfigDict(extra="ignore")
+
+    # Required: no sensible default.
     API_HASH: SecretStr
+    API_ID: int
     BOT_TOKEN: SecretStr
+    BROWSERLESS_TOKEN: SecretStr
     CHANNEL_ID: int
     MY_CHAT_ID: int
-    BROWSERLESS_TOKEN: SecretStr
+
+    # Optional: sane defaults, overridable from the environment.
+    DEBUG: bool = False
+    SESSION_FILE: Path = Path("credentials/account.session")
+    DB_PATH: Path = Path("db/links.db")
     BROWSERLESS_URL: str = "ws://browserless:3000"
     TZ: str = "Asia/Singapore"
 

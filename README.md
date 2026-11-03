@@ -31,8 +31,10 @@ uv run pyright
 ```
 
 Settings are read from environment variables (see
-`src/polythought/settings.py`). The test suite provides dummy values in
-`tests/conftest.py`, so no real credentials are needed to run it.
+`src/polythought/settings.py`); optional settings have sane defaults, so only
+the required ones in [`.env.example`](.env.example) need real values. The test
+suite provides dummy values in `tests/conftest.py`, so no real credentials are
+needed to run it.
 
 ## CI/CD
 
@@ -76,10 +78,19 @@ To build and run the image from a local checkout instead:
 docker compose -f compose.yml -f compose.build.yml up --build
 ```
 
-`env/prod.env` must provide `SESSION_FILE`, `DB_PATH`, `API_ID`, `API_HASH`,
-`BOT_TOKEN`, `CHANNEL_ID`, `MY_CHAT_ID`, and `BROWSERLESS_TOKEN`. The browser
-used to resolve page titles is expected at `ws://browserless:3000` by default;
-override that with `BROWSERLESS_URL`.
+Configuration is split three ways:
+
+- Credentials and secrets (`API_ID`, `API_HASH`, `BOT_TOKEN`,
+  `BROWSERLESS_TOKEN`) go in `.env`; copy [`.env.example`](.env.example) and
+  fill it in.
+- Deployment-specific settings (`CHANNEL_ID`, `MY_CHAT_ID`, `SESSION_FILE`) are
+  inlined in `compose.yml`.
+- Everything else (`DEBUG`, `DB_PATH`, `BROWSERLESS_URL`, `TZ`) has a sane
+  default in `src/polythought/settings.py` and only needs overriding when the
+  default does not fit.
+
+The browser used to resolve page titles is expected at `ws://browserless:3000`
+by default; override that with `BROWSERLESS_URL`.
 
 [Polythought]: https://t.me/polythought
 [polythought-bot]: https://t.me/PolythoughtBot

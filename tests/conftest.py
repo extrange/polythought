@@ -8,17 +8,17 @@ _TMP_DIR = tempfile.TemporaryDirectory(prefix="polythought-tests-")
 _ROOT = Path(_TMP_DIR.name)
 
 # Settings are validated at import time, so this must happen before any
-# `polythought` module is imported.
+# `polythought` module is imported. Required settings get placeholders; the
+# paths are overridden so tests never touch the real session or database.
 os.environ.update(
     {
-        "TZ": "Asia/Singapore",
-        "SESSION_FILE": str(_ROOT / "session"),
-        "DB_PATH": str(_ROOT / "links.db"),
-        "API_ID": "12345",
         "API_HASH": "test-api-hash",
+        "API_ID": "12345",
         "BOT_TOKEN": "12345:test-bot-token",
+        "BROWSERLESS_TOKEN": "test-browserless-token",
         "CHANNEL_ID": "-1001234567890",
         "MY_CHAT_ID": "123456789",
-        "BROWSERLESS_TOKEN": "test-browserless-token",
+        "SESSION_FILE": str(_ROOT / "session"),
+        "DB_PATH": str(_ROOT / "links.db"),
     }
 )

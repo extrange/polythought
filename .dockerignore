@@ -13,6 +13,8 @@
 **/*.egg-info
 db
 credentials
+.env
+.env.*
 env
 tests
 compose*.yml
