@@ -22,7 +22,7 @@ class _Settings(BaseSettings):
     DEBUG: bool = False
     SESSION_FILE: Path = Path("credentials/account.session")
     DB_PATH: Path = Path("db/links.db")
-    CAMOFOX_URL: str
+    CAMOFOX_URL: str = "http://polythought-camofox:9377"
     CAMOFOX_USER_ID: str = "polythought"
     TZ: str = "Asia/Singapore"
 
