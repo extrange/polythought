@@ -15,7 +15,6 @@ os.environ.update(
         "API_HASH": "test-api-hash",
         "API_ID": "12345",
         "BOT_TOKEN": "12345:test-bot-token",
-        "BROWSERLESS_TOKEN": "test-browserless-token",
         "CHANNEL_ID": "-1001234567890",
         "MY_CHAT_ID": "123456789",
         "SESSION_FILE": str(_ROOT / "session"),

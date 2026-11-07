@@ -80,17 +80,17 @@ docker compose -f compose.yml -f compose.build.yml up --build
 
 Configuration is split three ways:
 
-- Credentials and secrets (`API_ID`, `API_HASH`, `BOT_TOKEN`,
-  `BROWSERLESS_TOKEN`) go in `.env`; copy [`.env.example`](.env.example) and
-  fill it in.
+- Credentials and secrets (`API_ID`, `API_HASH`, `BOT_TOKEN`) go in `.env`; copy
+  [`.env.example`](.env.example) and fill it in.
 - Deployment-specific settings (`CHANNEL_ID`, `MY_CHAT_ID`, `SESSION_FILE`) are
   inlined in `compose.yml`.
-- Everything else (`DEBUG`, `DB_PATH`, `BROWSERLESS_URL`, `TZ`) has a sane
+- Everything else (`DEBUG`, `DB_PATH`, `CAMOFOX_URL`, `TZ`) has a sane
   default in `src/polythought/settings.py` and only needs overriding when the
   default does not fit.
 
-The browser used to resolve page titles is expected at `ws://browserless:3000`
-by default; override that with `BROWSERLESS_URL`.
+`compose.yml` starts a dedicated camofox browser alongside the bot. Page titles
+are resolved through its HTTP API at `http://polythought-camofox:9377` by
+default; override that with `CAMOFOX_URL`.
 
 [Polythought]: https://t.me/polythought
 [polythought-bot]: https://t.me/PolythoughtBot

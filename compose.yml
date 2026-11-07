@@ -6,20 +6,37 @@ services:
     restart: always
     container_name: polythought
     init: true
+    depends_on:
+      polythought-camofox:
+        condition: service_healthy
     environment:
       API_HASH: "${API_HASH:?API_HASH is required}"
       API_ID: "${API_ID:?API_ID is required}"
       BOT_TOKEN: "${BOT_TOKEN:?BOT_TOKEN is required}"
-      BROWSERLESS_TOKEN: "${BROWSERLESS_TOKEN:?BROWSERLESS_TOKEN is required}"
       # Deployment-specific settings, kept here so .env only holds secrets.
       CHANNEL_ID: "-1002079983177"
       MY_CHAT_ID: "427380463"
       SESSION_FILE: /app/credentials/prod_account.session
+      CAMOFOX_URL: http://polythought-camofox:9377
     volumes:
       - ./db:/app/db
       - ./credentials:/app/credentials
+
+  # Dedicated browser for resolving page titles. It is intentionally private to
+  # this project: its own volume, session state, and network.
+  polythought-camofox:
+    image: ghcr.io/jo-inc/camofox-browser@sha256:cff2c1432b609bde9c9d0b91e5b924dae0799d3c7bc9d468c0bc949325beaf2a
+    restart: always
+    container_name: polythought-camofox
+    init: true
+    shm_size: 2G
+    volumes:
+      - ./data/camofox:/root/.camofox
     networks:
       - polythought
-
-networks:
-  polythought:
+    environment:
+      MAX_OLD_SPACE_SIZE: 2048
+      CAMOFOX_CRASH_REPORT_ENABLED: false
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9377/health"]
+      start_period: 30s

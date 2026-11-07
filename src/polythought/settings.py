@@ -15,7 +15,6 @@ class _Settings(BaseSettings):
     API_HASH: SecretStr
     API_ID: int
     BOT_TOKEN: SecretStr
-    BROWSERLESS_TOKEN: SecretStr
     CHANNEL_ID: int
     MY_CHAT_ID: int
 
@@ -23,7 +22,8 @@ class _Settings(BaseSettings):
     DEBUG: bool = False
     SESSION_FILE: Path = Path("credentials/account.session")
     DB_PATH: Path = Path("db/links.db")
-    BROWSERLESS_URL: str = "ws://browserless:3000"
+    CAMOFOX_URL: str
+    CAMOFOX_USER_ID: str = "polythought"
     TZ: str = "Asia/Singapore"
 
 
